@@ -1,32 +1,33 @@
 import React from 'react'
 import { Button, Dialog, DialogActions, DialogTitle, TextField, DialogContent } from '@mui/material'
 
-function AddDetailsPopUp({ isEditDialogOpen, editedDetails, setEditedDetails, handleEditDialogClose }) {
+function AddDetailsPopUp({ isEditDialogOpen, details, setDetails, handleEditDialogClose, handleEditSave }) {
   return (
     <Dialog open={isEditDialogOpen} onClose={handleEditDialogClose}>
-      <DialogTitle>Edit Details</DialogTitle>
+      <DialogTitle>Add Details</DialogTitle>
       <DialogContent sx={{ width: "40vw", maxWidth: "350px", minWidth: "200px", padding: "2vw" }}>
         <TextField
           label="Title"
           variant="outlined"
           fullWidth
-          value={editedDetails.title}
-          onChange={(e) => { setEditedDetails({ ...editedDetails, title: e.target.value }) }}
+          value={details.cardTitle}
+          onChange={(e) => { setDetails({ ...details, cardTitle: e.target.value }) }}
         />
         <TextField
           label="Amount"
+          type="number"
           variant="outlined"
           fullWidth
-          value={editedDetails.amount}
-          onChange={(e) => { setEditedDetails({ ...editedDetails, amount: e.target.value }) }}
+          value={details.cardAmount}
+          onChange={(e) => { setDetails({ ...details, cardAmount: e.target.value }) }}
         />
         <TextField
           label="Due Date"
           type="date"
           variant="outlined"
           fullWidth
-          value={editedDetails.dueDate}
-          onChange={(e) => { setEditedDetails({ ...editedDetails, dueDate: e.target.value }) }}
+          value={details.cardDueDate}
+          onChange={(e) => { setDetails({ ...details, cardDueDate: e.target.value }) }}
         />
       </DialogContent>
       <DialogActions>
