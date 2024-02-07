@@ -1,10 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
 import Header from "./components/Header";
 import { IconButton, List, ListItem, Paper, ThemeProvider, createTheme, useMediaQuery } from "@mui/material";
-import MyCard from "./components/MyCard";
+import MyCard from "./components/card/MyCard";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import axios_instance from "./axios_instance";
+import { getAllCardDetails } from "./controller/card_payment_controller";
 
 function App() {
 
@@ -187,31 +188,12 @@ function App() {
   ]
 
   const [toBePaidItems, setToBePaidItems] = useState(null);
-  const [PaidItems, setPaidItems] = useState(null);
-
-  const dueDateChecker = (date) => {
-
-  }
+  const [paidItems, setPaidItems] = useState(null);
 
   // Intial page load data retrival
   useEffect(async () => {
-    if (toBePaidItems !== null) return;
-    let toBePaidList = [], paidList = [];
-    const data = (await axios_instance.get("/get_all_cards")).data;
-    for (let d in data) {
-      if (d["cardAmount"] === 0) {
-        d["color"] = "green";
-        toBePaidList.push(d);
-      } else {
-        if (dueDateChecker(d["cardDueDate"])) {
-          d["color"] = "white";
-          paidList.push(d);
-        } else {
-          d["color"] = "red";
-          paidList.push(d);
-        }
-      }
-    }
+    if (toBePaidItems !== null || paidItems !== null) return;
+    const [toBePaidList, paidList] = getAllCardDetails();
     setToBePaidItems(toBePaidList);
     setPaidItems(paidList);
   }, [])
@@ -225,7 +207,7 @@ function App() {
           <List ref={listRef}
             style={{ display: "flex", overflowX: "hidden", scrollBehavior: "smooth" }}>
             {items.map((item, index) => (
-              <ListItem key={index} style={{ minWidth: "250px" }}>
+              <ListItem key={index} style={{ minWidth: "280px" }}>
                 <MyCard
                   title={item.title}
                   amount={item.amount}
@@ -276,7 +258,7 @@ function App() {
             <ChevronRightIcon />
           </IconButton>
         </Paper>
-        
+
       </ThemeProvider>
     </div>
   );

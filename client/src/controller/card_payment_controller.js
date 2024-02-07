@@ -21,21 +21,40 @@ const editCardDetails = async (data) => {
 
 const addCardDetails = async (data) => {
   try {
-    await axios_instance.post("/", data, { params: { id: id } });
+    await axios_instance.post("/", data);
     return "Saved successfully!!!";
   } catch (ex) {
     return "Error while saving the details please try again!!!";
   }
 }
 
-const getAllCards = async () => {
+const getAllCardDetails = async () => {
+
+  const dueDateChecker = (date) => {
+
+  }
+
   try {
-    const data = await axios_instance.get("/", data, { params: { id: id } });
-    data = data === null ? [] : data;
-    return data;
+    let toBePaidList = [], paidList = [];
+    const data = (await axios_instance.get("/")).data;
+    for (let d in data) {
+      if (d["cardAmount"] === 0) {
+        d["color"] = "green";
+        toBePaidList.push(d);
+      } else {
+        if (dueDateChecker(d["cardDueDate"])) {
+          d["color"] = "white";
+          paidList.push(d);
+        } else {
+          d["color"] = "red";
+          paidList.push(d);
+        }
+      }
+    }
+    return [toBePaidList, paidList];
   } catch (ex) {
     return null;
   }
 }
 
-export { addCardDetails, deleteCardDetails, editCardDetails, getAllCards };
+export { addCardDetails, deleteCardDetails, editCardDetails, getAllCardDetails };
